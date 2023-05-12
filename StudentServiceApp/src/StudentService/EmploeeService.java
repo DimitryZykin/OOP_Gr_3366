@@ -6,29 +6,43 @@ import java.util.List;
 import StudentDomen.Emploee;
 import StudentDomen.UserComparator;
 
-public class EmploeeService implements iUserService<Emploee> {
+//Данный класс реализует интерфейс iUserService для работы с объектами типа Emploee.
+
+public class EmploeeService implements iUserService<Emploee>{
     private int count;
     private List<Emploee> emploees;
-    public EmploeeService() {
-        this.emploees = new ArrayList<Emploee>();
+
+    // Конструктор
+
+    public EmploeeService(){
+        this.emploees = new ArrayList<>();
     }
+
+     /**
+     * Метод создания нового объекта типа Emploee.
+     * @param firstName  имя сотрудника.
+     * @param secondName фамилия сотрудника.
+     * @param age        возраст сотрудника.
+     */
+
     @Override
-    public void create(String firstName, String secondName, int age) {
+    public void create(String firstName, String secondName, int age){
        Emploee per = new Emploee(firstName, secondName, age, count);
        count++;
        emploees.add(per);
     }
 
-    @Override
-    public List<Emploee> getAll()
-    {
+    //Метод получения всех объектов типа Emploee.
+
+    public List<Emploee> getAll(){
         return emploees;
     }
 
-    public List<Emploee> getSortedByFIOStudentGroup(int numberGroup)
-    {
-        List<Emploee> emps = new ArrayList<>(emploees);
-        emps.sort(new UserComparator<Emploee>());
-        return emps;
+    // Метод получения списка объектов типа Emploee, отсортированных по ФИО и группе.
+     
+    public List<Emploee> getSortedByFIOStudentGroup(){
+        List<Emploee> employees = new ArrayList<>(this.emploees);
+        employees.sort(new UserComparator<>());
+        return emploees;
     }
 }
