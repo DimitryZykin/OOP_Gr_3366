@@ -2,79 +2,85 @@ package Controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.jws.WebParam.Mode;
-
+import Model.Dict;
 import Model.Student;
-import Model.Model;
-import View.View;
 
-public class Controller {
+/**
+ * Класс контроллера, который связывает Model и View.
+ * Содержит методы для получения списка студентов из Model, обновления представления View,
+ * запуска приложения и обработки команд пользователя.
+ */
 
-    private List<Student> students; 
-    private iGetView view;
-    private iGetModel model;
+public class Controller{
+    
+    private List<Student> students; // ссылка на список студентов
+    private iGetView view; // ссылка на объект представления View (с исползованием интерфейса)
+    private iGetModel model; // ссылка на объект модели Model (с исползованием интерфейса)
+    private String lang; // язык приложения
+    
+    /**
+     * Конструктор класса.
+     * @param view - объект представления
+     * @param model - объект модели
+     * @param lang - язык приложения
+     */
 
-    public Controller(iGetView view, iGetModel model) {
+    public Controller(iGetView view, iGetModel model, String lang){
         this.view = view;
         this.model = model;
+        this.lang = lang;
         this.students = new ArrayList<Student>();
     } 
+    
+    // Метод для получения и отправки напрямую списка студентов из Model в View (реализация MVC)
 
-    public void getAllStudent()
-    {
-        students = model.getAllStudent();
+    public void updateView(){
+        view.printAllStudents(model.getAllStudents());
     }
 
-    public boolean testData()
-    {
-        if(students.size()>0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    /**
+     * Метод для получения (перехвата) команд от пользователя.
+     */
 
-    public void updateView()
-    {
-        //MVP
-        getAllStudent();
-        if(testData())
-        {
-            view.printAllStudent(students);
-        }
-        else{
-            System.out.println("Список студентов пуст!");
-        }
-        
-        //MVC
-        //view.printAllStudent(model.getAllStudent());
-    }
-
-    public void run()
-    {
-        Commands com = Commands.NONE;
-        boolean getNewIteration = true;
-        while(getNewIteration)
-        {
-            String command = view.prompt("Введите команду:");
-            com = Commands.valueOf(command.toUpperCase());
-            switch(com)
-            {
-                case EXIT:
-                    getNewIteration=false;
-                    System.out.println("Выход из программы!");
-                    break;
-                case LIST:
-                    getAllStudent();
-                    updateView();
-                    break;
+    public void run(){
+        boolean getNewIteration = true; // флаг
+        while (getNewIteration) {
+            String command = view.prompt(Dict.get("enterCommand", lang));
+            
+            try{
+                Commands com = Commands.valueOf(command.toUpperCase());
+                switch (com) {
+                    // Командя для выхода из программы
+                    case EXIT:
+                        getNewIteration = false;
+                        System.out.println(Dict.get("exit", lang));
+                        break;
+                    // Вывод списка студентов
+                    case LIST:
+                        updateView();
+                        System.out.println("");
+                        break;
+                    // Удаление Студента
+                    case DELETE:
+                        updateView();
+                        Long studentID = Long.parseLong(view.prompt(Dict.get("enterStudentId", lang)));
+                        boolean isDeleted = model.deleteStudent(studentID);
+                        if (!isDeleted){
+                            System.out.println(Dict.get("notFound", lang));
+                        } else {
+                            System.out.println(Dict.get("deleted", lang));
+                            updateView();
+                            System.out.println("");
+                        }
+                        break;
+                    default:
+                        System.out.println(Dict.get("notCorrect", lang));
+                        break;
+                }
+            } catch (Exception e){
+                System.out.println(Dict.get("notCorrect", lang) + " = " + e.getMessage());
+                System.out.println("");
             }
-
         }
     }
-
 }
