@@ -1,10 +1,11 @@
 package Controller;
 
-public enum Commands {
-    NONE,
-    READ,
-    CREATE,
-    UPDATE,
+// Нумератор
+
+public enum Commands{
+    // READ,
+    // CREATE,
+    // UPDATE,
     LIST,
     DELETE,
     EXIT
