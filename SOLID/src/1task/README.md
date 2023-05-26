@@ -1,4 +1,4 @@
-**Базовое задние:
+**Базовое задние:**
 1) Переписать код в соответствии с Single Responsibility Principle:
 public class Employee {
 private String name;
@@ -18,4 +18,4 @@ return baseSalary - tax;
 }
 }
 
-**Подсказка: вынесите метод calculateNetSalary() в отдельный класс
+**Подсказка: вынесите метод calculateNetSalary() в отдельный класс**
