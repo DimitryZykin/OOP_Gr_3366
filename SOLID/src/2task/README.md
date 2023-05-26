@@ -11,6 +11,7 @@ return vehicle.getMaxSpeed() * 0.6;
     return 0.0;
 }
 } ```
+
 ``` public class Vehicle {
 int maxSpeed;
 String type;
